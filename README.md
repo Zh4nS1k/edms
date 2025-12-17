@@ -7,6 +7,7 @@
 - `edms-identity-service` (Identity Service): управление пользователями/ролями, интеграция с Keycloak. Порт `8082`.
 - `edms-workflow-service` (Workflow Service): задачи/оркестрация, обращается к Identity через OpenFeign. Порт `8083`.
 - `edms-document-service` (Document Service): файлы и метаданные через MinIO + PostgreSQL. Порт `8084`.
+- `edms-document-worker` (Document Worker): слушает RabbitMQ события о документах, тянет файл из MinIO, вычисляет хеш и сохраняет результат в Postgres. Порт `8091`.
 - Инфраструктура: `postgres` (отдельные БД под каждый сервис), `minio`, `rabbitmq`, `redis`, `keycloak` (dev-стенд). `rabbit/` — примеры обмена сообщениями; `redis/` — примеры кэш/сессии.
 
 ## Конфигурации (единый формат)

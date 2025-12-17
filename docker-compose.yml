@@ -136,6 +136,42 @@ services:
       - "8084:8084"
     restart: unless-stopped
 
+  document-worker-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: edms_document_worker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5436:5432"
+    volumes:
+      - document-worker-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  document-worker:
+    build: ./edms-document-worker/service
+    environment:
+      SERVER_PORT: 8091
+      WORKER_DB_URL: jdbc:postgresql://document-worker-db:5432/edms_document_worker
+      WORKER_DB_USERNAME: postgres
+      WORKER_DB_PASSWORD: postgres
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+      DOCUMENT_EXCHANGE: edms.document.events
+      DOCUMENT_QUEUE: edms.document.process.queue
+      DOCUMENT_ROUTING_KEY: document.uploaded
+      MINIO_URL: http://minio:9000
+      MINIO_USER: root
+      MINIO_PASSWORD: Minio_File_Java_Spring_2023
+      MINIO_BUCKET: our-bucket
+    depends_on:
+      - document-worker-db
+      - rabbitmq
+      - minio
+    restart: unless-stopped
+
   api-gateway:
     build: ./edms-api-gateway
     environment:
@@ -159,3 +195,4 @@ volumes:
   task-db-data:
   file-db-data:
   minio-data:
+  document-worker-db-data:
