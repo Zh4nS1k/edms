@@ -2,9 +2,9 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/edms-file-service" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/edms-task-service" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/edms-user-service" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/edms-document-service" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/edms-identity-service" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/edms-workflow-service" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/rabbit" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/redis" vcs="Git" />
   </component>

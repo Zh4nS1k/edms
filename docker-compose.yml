@@ -68,7 +68,9 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-    command: start-dev --http-port 8080
+    command: start-dev --http-port 8080 --import-realm
+    volumes:
+      - ./keycloak/realm-edms.json:/opt/keycloak/data/import/realm-edms.json:ro
     ports:
       - "8081:8080"
     depends_on:
@@ -83,8 +85,8 @@ services:
       USER_DB_USERNAME: postgres
       USER_DB_PASSWORD: qweqwe
       KEYCLOAK_URL: http://keycloak:8080/auth
-      KEYCLOAK_REALM: narxoz-dev
-      KEYCLOAK_CLIENT_ID: user-service-client
+      KEYCLOAK_REALM: edms
+      KEYCLOAK_CLIENT_ID: edms-identity-service
       KEYCLOAK_CLIENT_SECRET: 5V18tE98N5whj9pFzrz4fMtVDnT4MNXD
     depends_on:
       - user-db
@@ -102,7 +104,7 @@ services:
       TASK_DB_PASSWORD: qwerty
       USER_SERVICE_URL: http://identity-service:8082
       KEYCLOAK_URL: http://keycloak:8080/auth
-      KEYCLOAK_REALM: narxoz-dev
+      KEYCLOAK_REALM: edms
     depends_on:
       - task-db
       - identity-service
@@ -121,6 +123,8 @@ services:
       MINIO_USER: root
       MINIO_PASSWORD: Minio_File_Java_Spring_2023
       MINIO_BUCKET: our-bucket
+      KEYCLOAK_URL: http://keycloak:8080/auth
+      KEYCLOAK_REALM: edms
     depends_on:
       - file-db
       - minio

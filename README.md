@@ -16,8 +16,14 @@
 - `KEYCLOAK_URL` / `KEYCLOAK_REALM` / `KEYCLOAK_CLIENT_ID` / `KEYCLOAK_CLIENT_SECRET` — настройки Keycloak.
 - `MINIO_URL` / `MINIO_USER` / `MINIO_PASSWORD` / `MINIO_BUCKET` — настройки MinIO (file-service).
 
+## Keycloak
+- Realm: `edms` (автоимпортируется из `keycloak/realm-edms.json` при `docker compose up`).
+- Роли: `ADMIN`, `MANAGER`, `EMPLOYEE`.
+- Клиенты: `edms-api-gateway` (для проверки токенов на входе), bearer-only клиенты для сервисов (`edms-identity-service`, `edms-workflow-service`, `edms-document-service`).
+- Все сервисы настроены как Resource Server на JWT (`spring.security.oauth2.resourceserver.jwt.issuer-uri` → `.../realms/edms`).
+
 ## Docker Compose
-Создан единый `docker-compose.yml`, который поднимает БД, MinIO, Redis, RabbitMQ, Keycloak и сами сервисы с согласованными портами.
+Создан единый `docker-compose.yml`, который поднимает БД, MinIO, Redis, RabbitMQ, Keycloak (с импортом realm) и сами сервисы с согласованными портами.
 
 Запуск:
 ```bash

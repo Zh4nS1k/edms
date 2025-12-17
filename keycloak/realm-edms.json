@@ -1,0 +1,53 @@
+{
+  "realm": "edms",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      { "name": "ADMIN", "composite": false, "clientRole": false, "containerId": "edms" },
+      { "name": "MANAGER", "composite": false, "clientRole": false, "containerId": "edms" },
+      { "name": "EMPLOYEE", "composite": false, "clientRole": false, "containerId": "edms" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "edms-api-gateway",
+      "name": "EDMS API Gateway",
+      "publicClient": false,
+      "bearerOnly": false,
+      "serviceAccountsEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "protocol": "openid-connect"
+    },
+    {
+      "clientId": "edms-identity-service",
+      "name": "EDMS Identity Service",
+      "bearerOnly": true,
+      "publicClient": false,
+      "directAccessGrantsEnabled": false,
+      "standardFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "protocol": "openid-connect"
+    },
+    {
+      "clientId": "edms-workflow-service",
+      "name": "EDMS Workflow Service",
+      "bearerOnly": true,
+      "publicClient": false,
+      "directAccessGrantsEnabled": false,
+      "standardFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "protocol": "openid-connect"
+    },
+    {
+      "clientId": "edms-document-service",
+      "name": "EDMS Document Service",
+      "bearerOnly": true,
+      "publicClient": false,
+      "directAccessGrantsEnabled": false,
+      "standardFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "protocol": "openid-connect"
+    }
+  ]
+}
