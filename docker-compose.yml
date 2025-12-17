@@ -125,9 +125,13 @@ services:
       MINIO_BUCKET: our-bucket
       KEYCLOAK_URL: http://keycloak:8080/auth
       KEYCLOAK_REALM: edms
+      REDIS_HOST: redis
+      RABBITMQ_HOST: rabbitmq
     depends_on:
       - file-db
       - minio
+      - rabbitmq
+      - redis
     ports:
       - "8084:8084"
     restart: unless-stopped
