@@ -1,0 +1,40 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: edms-api-gateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_URL:http://localhost:8081/auth}/realms/${KEYCLOAK_REALM:edms}
+  cloud:
+    gateway:
+      default-filters:
+        - RemoveRequestHeader=Cookie
+      routes:
+        - id: identity-service
+          uri: ${IDENTITY_SERVICE_URL:http://identity-service:8082}
+          predicates:
+            - Path=/identity/**
+          filters:
+            - StripPrefix=1
+        - id: workflow-service
+          uri: ${WORKFLOW_SERVICE_URL:http://workflow-service:8083}
+          predicates:
+            - Path=/workflow/**
+          filters:
+            - StripPrefix=1
+        - id: document-service
+          uri: ${DOCUMENT_SERVICE_URL:http://document-service:8084}
+          predicates:
+            - Path=/document/**
+          filters:
+            - StripPrefix=1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

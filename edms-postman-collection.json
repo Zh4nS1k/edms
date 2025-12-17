@@ -1,0 +1,190 @@
+{
+  "info": {
+    "name": "EDMS End-to-End",
+    "_postman_id": "edms-e2e-collection",
+    "description": "Коллекция для проверки EDMS через API Gateway с JWT от Keycloak (realm edms). Используйте Postman Env с переменными baseUrl, keycloakUrl, clientId, clientSecret, username, password, accessToken.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Get Token (Password Grant)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "grant_type", "value": "password", "type": "text" },
+            { "key": "client_id", "value": "{{clientId}}", "type": "text" },
+            { "key": "client_secret", "value": "{{clientSecret}}", "type": "text" },
+            { "key": "username", "value": "{{username}}", "type": "text" },
+            { "key": "password", "value": "{{password}}", "type": "text" }
+          ]
+        },
+        "url": {
+          "raw": "{{keycloakUrl}}/realms/edms/protocol/openid-connect/token",
+          "host": ["{{keycloakUrl}}"],
+          "path": ["realms", "edms", "protocol", "openid-connect", "token"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Gateway - Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/actuator/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["actuator", "health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Identity - List Users",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/identity/api/users",
+          "host": ["{{baseUrl}}"],
+          "path": ["identity", "api", "users"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Identity - Create User",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"test.user\",\n  \"email\": \"test.user@example.com\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\",\n  \"password\": \"P@ssw0rd\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/identity/api/users",
+          "host": ["{{baseUrl}}"],
+          "path": ["identity", "api", "users"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Workflow - Get Tasks",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/workflow/api/tasks",
+          "host": ["{{baseUrl}}"],
+          "path": ["workflow", "api", "tasks"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Workflow - Create Task",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Review document\",\n  \"description\": \"Check new upload\",\n  \"status\": \"NEW\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/workflow/api/tasks",
+          "host": ["{{baseUrl}}"],
+          "path": ["workflow", "api", "tasks"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Document - Upload File",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "file", "type": "file", "src": "" }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/document/file/upload",
+          "host": ["{{baseUrl}}"],
+          "path": ["document", "file", "upload"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Document - List Files (cached)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/document/file",
+          "host": ["{{baseUrl}}"],
+          "path": ["document", "file"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Document - Download by fileName",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/document/file/download/{{fileName}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["document", "file", "download", "{{fileName}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Worker - DB Check (optional, if exposed)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/document-worker/actuator/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["document-worker", "actuator", "health"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "keycloakUrl", "value": "http://localhost:8081/auth" },
+    { "key": "clientId", "value": "edms-api-gateway" },
+    { "key": "clientSecret", "value": "CHANGE_ME" },
+    { "key": "username", "value": "admin" },
+    { "key": "password", "value": "admin" },
+    { "key": "accessToken", "value": "" },
+    { "key": "fileName", "value": "" }
+  ]
+}

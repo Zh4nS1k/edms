@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   user-db:
     image: postgres:15
@@ -12,6 +10,8 @@ services:
     volumes:
       - user-db-data:/var/lib/postgresql/data
     restart: unless-stopped
+    networks:
+      - edms-net
 
   task-db:
     image: postgres:15
@@ -24,6 +24,8 @@ services:
     volumes:
       - task-db-data:/var/lib/postgresql/data
     restart: unless-stopped
+    networks:
+      - edms-net
 
   file-db:
     image: postgres:15
@@ -36,6 +38,8 @@ services:
     volumes:
       - file-db-data:/var/lib/postgresql/data
     restart: unless-stopped
+    networks:
+      - edms-net
 
   minio:
     image: minio/minio:RELEASE.2024-02-17T01-15-57Z
@@ -49,6 +53,8 @@ services:
     volumes:
       - minio-data:/data
     restart: unless-stopped
+    networks:
+      - edms-net
 
   rabbitmq:
     image: rabbitmq:3.13-management
@@ -56,12 +62,16 @@ services:
       - "5672:5672"
       - "15672:15672"
     restart: unless-stopped
+    networks:
+      - edms-net
 
   redis:
     image: redis:7-alpine
     ports:
       - "6379:6379"
     restart: unless-stopped
+    networks:
+      - edms-net
 
   keycloak:
     image: quay.io/keycloak/keycloak:24.0
@@ -76,6 +86,8 @@ services:
     depends_on:
       - user-db
     restart: unless-stopped
+    networks:
+      - edms-net
 
   identity-service:
     build: ./edms-identity-service
@@ -94,6 +106,8 @@ services:
     ports:
       - "8082:8082"
     restart: unless-stopped
+    networks:
+      - edms-net
 
   workflow-service:
     build: ./edms-workflow-service
@@ -111,6 +125,8 @@ services:
     ports:
       - "8083:8083"
     restart: unless-stopped
+    networks:
+      - edms-net
 
   document-service:
     build: ./edms-document-service
@@ -135,6 +151,8 @@ services:
     ports:
       - "8084:8084"
     restart: unless-stopped
+    networks:
+      - edms-net
 
   document-worker-db:
     image: postgres:15
@@ -147,6 +165,8 @@ services:
     volumes:
       - document-worker-db-data:/var/lib/postgresql/data
     restart: unless-stopped
+    networks:
+      - edms-net
 
   document-worker:
     build: ./edms-document-worker/service
@@ -171,6 +191,8 @@ services:
       - rabbitmq
       - minio
     restart: unless-stopped
+    networks:
+      - edms-net
 
   api-gateway:
     build: ./edms-api-gateway
@@ -189,6 +211,8 @@ services:
     ports:
       - "8080:8080"
     restart: unless-stopped
+    networks:
+      - edms-net
 
 volumes:
   user-db-data:
@@ -196,3 +220,7 @@ volumes:
   file-db-data:
   minio-data:
   document-worker-db-data:
+
+networks:
+  edms-net:
+    driver: bridge
