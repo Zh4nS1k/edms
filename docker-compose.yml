@@ -75,8 +75,8 @@ services:
       - user-db
     restart: unless-stopped
 
-  user-service:
-    build: ./edms-user-service
+  identity-service:
+    build: ./edms-identity-service
     environment:
       SERVER_PORT: 8082
       USER_DB_URL: jdbc:postgresql://user-db:5432/userdb
@@ -93,25 +93,25 @@ services:
       - "8082:8082"
     restart: unless-stopped
 
-  task-service:
-    build: ./edms-task-service
+  workflow-service:
+    build: ./edms-workflow-service
     environment:
       SERVER_PORT: 8083
       TASK_DB_URL: jdbc:postgresql://task-db:5432/taskdb
       TASK_DB_USERNAME: postgres
       TASK_DB_PASSWORD: qwerty
-      USER_SERVICE_URL: http://user-service:8082
+      USER_SERVICE_URL: http://identity-service:8082
       KEYCLOAK_URL: http://keycloak:8080/auth
       KEYCLOAK_REALM: narxoz-dev
     depends_on:
       - task-db
-      - user-service
+      - identity-service
     ports:
       - "8083:8083"
     restart: unless-stopped
 
-  file-service:
-    build: ./edms-file-service
+  document-service:
+    build: ./edms-document-service
     environment:
       SERVER_PORT: 8084
       FILE_DB_URL: jdbc:postgresql://file-db:5432/filedb

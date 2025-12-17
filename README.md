@@ -3,10 +3,10 @@
 Общий контур для существующих микросервисов, приведённых к единому стилю и готовых к совместному запуску. Домен и бизнес-логика не менялись — адаптированы только конфигурации (имена, порты, переменные окружения, Docker).
 
 ## Сервисы и роли
-- `edms-user-service`: управление пользователями, интеграция с Keycloak. Порт по умолчанию `8082`.
-- `edms-task-service`: задачи/оркестрация, обращается к user-service через OpenFeign. Порт по умолчанию `8083`.
-- `edms-file-service`: работа с файлами и метаданными через MinIO + PostgreSQL. Порт по умолчанию `8084`.
-- Инфраструктура: `postgres` (отдельные БД под каждый сервис), `minio`, `rabbitmq`, `redis`, `keycloak` (dev-стенд). Папки `rabbit/` и `redis/` оставлены как примеры конфигураций и утилит.
+- `edms-identity-service` (Identity Service): управление пользователями/ролями, интеграция с Keycloak. Порт `8082`.
+- `edms-workflow-service` (Workflow Service): задачи/оркестрация, обращается к Identity через OpenFeign. Порт `8083`.
+- `edms-document-service` (Document Service): файлы и метаданные через MinIO + PostgreSQL. Порт `8084`.
+- Инфраструктура: `postgres` (отдельные БД под каждый сервис), `minio`, `rabbitmq`, `redis`, `keycloak` (dev-стенд). `rabbit/` — примеры обмена сообщениями; `redis/` — примеры кэш/сессии.
 
 ## Конфигурации (единый формат)
 Все сервисы переведены на переменные окружения с дефолтами в `application.properties`:
@@ -25,9 +25,9 @@ docker compose up -d --build
 ```
 
 Порты хоста (по умолчанию):
-- user-service: `8082`
-- task-service: `8083`
-- file-service: `8084`
+- identity-service: `8082`
+- workflow-service: `8083`
+- document-service: `8084`
 - Keycloak: `8081` (URL для сервисов `http://keycloak:8080/auth`)
 - MinIO API/Console: `9000` / `9001`
 - RabbitMQ UI: `15672`
