@@ -132,6 +132,24 @@ services:
       - "8084:8084"
     restart: unless-stopped
 
+  api-gateway:
+    build: ./edms-api-gateway
+    environment:
+      SERVER_PORT: 8080
+      IDENTITY_SERVICE_URL: http://identity-service:8082
+      WORKFLOW_SERVICE_URL: http://workflow-service:8083
+      DOCUMENT_SERVICE_URL: http://document-service:8084
+      KEYCLOAK_URL: http://keycloak:8080/auth
+      KEYCLOAK_REALM: edms
+    depends_on:
+      - identity-service
+      - workflow-service
+      - document-service
+      - keycloak
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
 volumes:
   user-db-data:
   task-db-data:
